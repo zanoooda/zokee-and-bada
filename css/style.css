@@ -1,0 +1,6 @@
+/* Game takes all the page squere and background is black because default phaser's background is black too */
+body {
+    padding: 0;
+    margin: 0;
+    background: black;
+}
