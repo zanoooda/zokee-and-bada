@@ -20,7 +20,7 @@ function create() {
     game.world.setBounds(0, 0, 800, 600);
 
     // Background color
-    game.stage.backgroundColor = "#4488AA"
+    game.stage.backgroundColor = "#CCFFFF"
 
     //Bada
     bada = game.add.sprite(200, 200, 'bada');
@@ -28,11 +28,14 @@ function create() {
     bada.body.collideWorldBounds=true;
     bada.anchor.setTo(0.5, 1);
     bada.body.gravity.y = 300;
-    bada.animations.add('stand', [0], 10, true);
+    bada.animations.add('stand', [4], 10, true);
+    bada.animations.add('right', [0, 1, 2, 3], 10, true);
+    bada.animations.add('left', [5, 6, 7, 8], 10, true);
 }
 
 // Update game
 function update() {
     // Camera
-    game.camera.focusOnXY(bada.x, bada.y)
+    game.camera.focusOnXY(bada.x, bada.y);
+    bada.animations.play('left');
 }
