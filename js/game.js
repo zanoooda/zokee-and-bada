@@ -5,22 +5,12 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, 'game-container', {
     update: update
 });
 
-// Game groups
-var platforms;
-
 // Game objects
-var ground;
-
-var zok;
 var bada;
 
-// Load all the game media before starting
+// Preload media
 function preload() {
-    game.load.spritesheet('zok', 'assets/images/zok.png', 100, 100);
-    game.load.spritesheet('bada', 'assets/images/bada.png', 100, 100);
-
-    game.load.image('background', 'assets/images/background.png');
-    game.load.image('ground', 'assets/images/ground.png');
+    game.load.spritesheet('bada', 'assets/images/bada.png', 48, 48);
 }
 
 // Create game
@@ -29,17 +19,8 @@ function create() {
     // Take width and height out to some config
     game.world.setBounds(0, 0, 800, 600);
 
-    // Background
-    game.add.tileSprite(0, 0, game.world.width, game.world.height, 'background');
-
-    // Platforms group
-    platforms = game.add.group();
-    platforms.enableBody = true;
-
-    // Ground
-    ground = platforms.create(0, game.world.height / 2, 'ground');
-    //ground.scale.setTo(200, 150);
-    ground.body.immovable = true;
+    // Background color
+    game.stage.backgroundColor = "#4488AA"
 
     //Bada
     bada = game.add.sprite(200, 200, 'bada');
@@ -48,16 +29,10 @@ function create() {
     bada.anchor.setTo(0.5, 1);
     bada.body.gravity.y = 300;
     bada.animations.add('stand', [0], 10, true);
-
-    // Zokee
-    zok = game.add.sprite(400, 200, 'zok');
 }
 
 // Update game
 function update() {
     // Camera
     game.camera.focusOnXY(bada.x, bada.y)
-
-    // Physics
-    game.physics.arcade.collide(bada, platforms);
 }
