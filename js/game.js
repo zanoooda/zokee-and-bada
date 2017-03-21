@@ -33,7 +33,7 @@ function create() {
     game.world.setBounds(0, 0, 1900, 600);
 
     // Background color
-    game.stage.backgroundColor = "#CCFFFF"
+    game.stage.backgroundColor = "#CCFFFF";
 
     // Inputs from keyboard
     cursors = game.input.keyboard.createCursorKeys();
@@ -69,32 +69,27 @@ function create() {
     zokee = game.add.group();
     zokee.enableBody = true;
     
-    zok1 = makeZok(300, 200);
-    zok2 = makeZok(550, 200);
-    zok3 = makeZok(700, 200);
-    zok4 = makeZok(850, 200);
-    zok5 = makeZok(1100, 200);
-    zok6 = makeZok(1300, 200);
-    zok7 = makeZok(1600, 200);
-    zok8 = makeZok(1800, 200);
+    makeZok(300, 200);
+    makeZok(550, 200);
+    makeZok(700, 200);
+    makeZok(850, 200);
+    makeZok(1100, 200);
+    makeZok(1300, 200);
+    makeZok(1600, 200);
+    makeZok(1800, 200);
+
+    // Camera
+    game.camera.follow(bada);
 }
 
 // Update game
 function update() {
-    // Camera
-    game.camera.focusOnXY(bada.x, bada.y);
+    //// Camera
+    //game.camera.focusOnXY(bada.x, bada.y);
 
     game.physics.arcade.collide(zokee, platforms);
     game.physics.arcade.collide(bada, platforms);
-
-    checkIntersectionWithBada(zok1);
-    checkIntersectionWithBada(zok2);
-    checkIntersectionWithBada(zok3);
-    checkIntersectionWithBada(zok4);
-    checkIntersectionWithBada(zok5);
-    checkIntersectionWithBada(zok6);
-    checkIntersectionWithBada(zok7);
-    checkIntersectionWithBada(zok8);
+    game.physics.arcade.collide(bada, zokee, collect);
 
     if (cursors.left.isDown) {
         bada.animations.play('left');
@@ -129,8 +124,6 @@ function makeZok(width, height) {
     return zok;
 }
 
-function checkIntersectionWithBada(zok) {
-    if(Phaser.Rectangle.intersects(zok.getBounds(), bada.getBounds())) {
-        zok.kill();
-    }
+function collect(bada, zok) {
+    zok.kill();
 }
