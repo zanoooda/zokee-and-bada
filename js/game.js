@@ -38,7 +38,6 @@ function create() {
     platforms = game.add.group();
     platforms.enableBody = true;
 
-    // Grounds
     var ground1 = platforms.create(0, (game.world.height / 4) * 3, 'ground');
     ground1.body.immovable = true;
 
@@ -51,7 +50,7 @@ function create() {
     var ground4 = platforms.create(1500, (game.world.height / 4) * 3, 'ground');
     ground4.body.immovable = true;
 
-    // clouds
+    // Clouds
     clouds = game.add.group();
     clouds.enableBody = true;
 
@@ -69,7 +68,7 @@ function create() {
     bada.animations.add('right', [0, 1, 2, 3], 10, true);
     bada.animations.add('left', [5, 6, 7, 8], 10, true);
     bada.animations.add('down', [9], 20, true);
-    //bada.animations.add('sit', [10], 20, true);
+    bada.animations.add('sit', [10], 20, true);
 
     // Zokee
     zokee = game.add.group();
@@ -90,10 +89,12 @@ function create() {
 
 // Update game
 function update() {
+    bada.sit = false;
+
     game.physics.arcade.collide(zokee, platforms);
     game.physics.arcade.collide(zokee, zokee);
     game.physics.arcade.collide(bada, platforms);
-    game.physics.arcade.collide(bada, clouds);
+    game.physics.arcade.collide(bada, clouds, sit);
     game.physics.arcade.collide(bada, zokee, collect);
 
     if (cursors.left.isDown) {
@@ -106,7 +107,9 @@ function update() {
     }
     else {
         bada.body.velocity.x = 0;
-        bada.animations.play('stand');
+        if(!bada.sit) {
+            bada.animations.play('stand');
+        }
     }
 
     if (cursors.up.isDown)
@@ -122,6 +125,13 @@ function update() {
 
 function collect(bada, zok) {
     zok.kill();
+}
+
+function sit() {
+    if(bada.y <= 100){
+        bada.sit = true;
+        bada.animations.play('sit');
+    }
 }
 
 function createZok(width, height, key) {
