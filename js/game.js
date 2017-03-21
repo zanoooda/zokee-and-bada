@@ -29,6 +29,7 @@ function preload() {
 // Create game
 function create() {
     game.physics.startSystem(Phaser.Physics.ARCADE);
+    //game.physics.arcade.gravity.y = 300;
     // Take width and height out to some config
     game.world.setBounds(0, 0, 1900, 600);
 
@@ -69,14 +70,14 @@ function create() {
     zokee = game.add.group();
     zokee.enableBody = true;
     
-    makeZok(300, 200);
-    makeZok(550, 200);
-    makeZok(700, 200);
-    makeZok(850, 200);
-    makeZok(1100, 200);
-    makeZok(1300, 200);
-    makeZok(1600, 200);
-    makeZok(1800, 200);
+    createZok(300, 200, 'zok');
+    createZok(550, 200, 'zok');
+    createZok(700, 200, 'zok');
+    createZok(850, 200, 'zok');
+    createZok(1100, 200, 'zok');
+    createZok(1300, 200, 'zok');
+    createZok(1600, 200, 'zok');
+    createZok(1800, 200, 'zok');
 
     // Camera
     game.camera.follow(bada);
@@ -84,10 +85,8 @@ function create() {
 
 // Update game
 function update() {
-    //// Camera
-    //game.camera.focusOnXY(bada.x, bada.y);
-
     game.physics.arcade.collide(zokee, platforms);
+    game.physics.arcade.collide(zokee, zokee);
     game.physics.arcade.collide(bada, platforms);
     game.physics.arcade.collide(bada, zokee, collect);
 
@@ -115,15 +114,14 @@ function update() {
     }
 }
 
-function makeZok(width, height) {
-    var zok = zokee.create(width, height, 'zok');
-    game.physics.arcade.enable(zok);
-    zok.anchor.setTo(0.5, 1);
-    zok.body.gravity.y = 300;
-
-    return zok;
-}
-
 function collect(bada, zok) {
     zok.kill();
+}
+
+function createZok(width, height, key) {
+    var zok = zokee.create(width, height, key);
+    zok.body.gravity.y = 300;
+    zok.anchor.setTo(0.5, 1);
+
+    game.physics.arcade.enable(zok);
 }
