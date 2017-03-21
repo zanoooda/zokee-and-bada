@@ -12,6 +12,7 @@ var cursors;
 var platforms;
 var clouds;
 var zokee;
+var honey;
 
 var bada;
 
@@ -21,6 +22,7 @@ function preload() {
     game.load.image('ground', 'assets/images/ground.png');
     game.load.image('zok', 'assets/images/zok.png');
     game.load.image('cloud', 'assets/images/cloud.png');
+    game.load.image('honey', 'assets/images/honey.png');
 }
 
 // Create game
@@ -95,6 +97,16 @@ function create() {
     createZok(1600, 200, 'zok');
     createZok(1800, 200, 'zok');
 
+    // Honey
+    honey = game.add.group();
+    honey.enableBody = true;
+
+    var honey1 = honey.create(350, 200, 'honey');
+    game.physics.arcade.enable(honey1);
+    //honey1.body.immovable = true;
+    honey1.body.gravity.y = 300;
+    honey1.anchor.setTo(0.5, 1);
+
     // Camera
     game.camera.follow(bada);
 }
@@ -104,12 +116,46 @@ function update() {
     manageClouds();
     bada.sit = false;
 
+    game.physics.arcade.collide(honey, platforms);
     game.physics.arcade.collide(zokee, platforms);
     game.physics.arcade.collide(zokee, zokee);
     game.physics.arcade.collide(bada, platforms);
     game.physics.arcade.collide(bada, clouds, sit);
     game.physics.arcade.collide(bada, zokee, collect);
+    game.physics.arcade.collide(bada, honey, collect);
 
+    manageInputs();
+}
+
+function collect(bada, item) {
+    item.kill();
+}
+
+function sit() {
+    if(bada.y <= 100){
+        bada.sit = true;
+        bada.animations.play('sit');
+    }
+    //manageInputs();
+}
+
+function createZok(width, height, key) {
+    var zok = zokee.create(width, height, key);
+    zok.body.gravity.y = 300;
+    zok.anchor.setTo(0.5, 1);
+
+    game.physics.arcade.enable(zok);
+}
+// This function can take clouds as argument
+function manageClouds() {
+    clouds.forEach(function(cloud) {
+        if(cloud.x < 0 - cloud.width){
+            cloud.x = game.world.width;
+        }
+    }, this);
+}
+
+function manageInputs() {
     if (cursors.left.isDown) {
         bada.animations.play('left');
         bada.body.velocity.x = -150;
@@ -134,31 +180,4 @@ function update() {
         bada.animations.play('down');
         bada.body.velocity.y = 150;
     }
-}
-
-function collect(bada, zok) {
-    zok.kill();
-}
-
-function sit() {
-    if(bada.y <= 100){
-        bada.sit = true;
-        bada.animations.play('sit');
-    }
-}
-
-function createZok(width, height, key) {
-    var zok = zokee.create(width, height, key);
-    zok.body.gravity.y = 300;
-    zok.anchor.setTo(0.5, 1);
-
-    game.physics.arcade.enable(zok);
-}
-// This function can take clouds as argument
-function manageClouds() {
-    clouds.forEach(function(cloud) {
-        if(cloud.x < 0 - cloud.width){
-            cloud.x = game.world.width;
-        }
-    }, this);
 }
