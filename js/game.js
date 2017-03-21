@@ -40,18 +40,11 @@ function create() {
     platforms = game.add.group();
     platforms.enableBody = true;
 
-    var ground1 = platforms.create(0, (game.world.height / 4) * 3, 'ground');
-    ground1.body.immovable = true;
-
-    var ground2 = platforms.create(500, (game.world.height / 4) * 3, 'ground');
-    ground2.body.immovable = true;
-
-    var ground3 = platforms.create(1000, (game.world.height / 4) * 3, 'ground');
-    ground3.body.immovable = true;
-
-    var ground4 = platforms.create(1500, (game.world.height / 4) * 3, 'ground');
-    ground4.body.immovable = true;
-
+    createPlatform(0, (game.world.height / 4) * 3, 'ground');
+    createPlatform(500, (game.world.height / 4) * 3, 'ground');
+    createPlatform(1000, (game.world.height / 4) * 3, 'ground');
+    createPlatform(1500, (game.world.height / 4) * 3, 'ground');
+    
     // Clouds
     clouds = game.add.group();
     clouds.enableBody = true;
@@ -149,6 +142,11 @@ function createZok(width, height, key) {
     var zok = zokee.create(width, height, key);
     zok.body.gravity.y = 300;
     zok.anchor.setTo(0.5, 1);
+}
+
+function createPlatform(width, height, key) {
+    var ground = platforms.create(width, height, key);
+    ground.body.immovable = true;
 }
 
 function createCloud(width, height, key) {
