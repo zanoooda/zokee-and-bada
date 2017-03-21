@@ -56,11 +56,19 @@ function create() {
 
     var cloud1 = clouds.create(500, 100, 'cloud');
     game.physics.arcade.enable(cloud1);
-    cloud1.body.gravity.x = -10;
+    cloud1.body.velocity.x = -10;
     cloud1.body.immovable = true;
     cloud1.body.checkCollision.down = false;
     cloud1.body.checkCollision.left = false;
     cloud1.body.checkCollision.right = false;
+
+    var cloud2 = clouds.create(900, 100, 'cloud');
+    game.physics.arcade.enable(cloud2);
+    cloud2.body.velocity.x = -10;
+    cloud2.body.immovable = true;
+    cloud2.body.checkCollision.down = false;
+    cloud2.body.checkCollision.left = false;
+    cloud2.body.checkCollision.right = false;
 
     //Bada
     bada = game.add.sprite(50, 150, 'bada');
@@ -92,6 +100,7 @@ function create() {
 
 // Update game
 function update() {
+    manageClouds();
     bada.sit = false;
 
     game.physics.arcade.collide(zokee, platforms);
@@ -143,4 +152,12 @@ function createZok(width, height, key) {
     zok.anchor.setTo(0.5, 1);
 
     game.physics.arcade.enable(zok);
+}
+// This function can take clouds as argument
+function manageClouds() {
+    clouds.forEach(function(cloud) {
+        if(cloud.x < 0 - cloud.width){
+            cloud.x = game.world.width;
+        }
+    }, this);
 }
