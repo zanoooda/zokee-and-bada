@@ -57,7 +57,7 @@ function create() {
     clouds.enableBody = true;
 
     var cloud1 = clouds.create(500, 100, 'cloud');
-    game.physics.arcade.enable(cloud1);
+    //game.physics.arcade.enable(cloud1);
     cloud1.body.velocity.x = -20;
     cloud1.body.immovable = true;
     cloud1.body.checkCollision.down = false;
@@ -124,38 +124,6 @@ function update() {
     game.physics.arcade.collide(bada, zokee, collect);
     game.physics.arcade.collide(bada, honey, collect);
 
-    manageInputs();
-}
-
-function collect(bada, item) {
-    item.kill();
-}
-
-function sit() {
-    if(bada.y <= 100){
-        bada.sit = true;
-        bada.animations.play('sit');
-    }
-    //manageInputs();
-}
-
-function createZok(width, height, key) {
-    var zok = zokee.create(width, height, key);
-    zok.body.gravity.y = 300;
-    zok.anchor.setTo(0.5, 1);
-
-    game.physics.arcade.enable(zok);
-}
-// This function can take clouds as argument
-function manageClouds() {
-    clouds.forEach(function(cloud) {
-        if(cloud.x < 0 - cloud.width){
-            cloud.x = game.world.width;
-        }
-    }, this);
-}
-
-function manageInputs() {
     if (cursors.left.isDown) {
         bada.animations.play('left');
         bada.body.velocity.x = -150;
@@ -180,4 +148,29 @@ function manageInputs() {
         bada.animations.play('down');
         bada.body.velocity.y = 150;
     }
+}
+
+function collect(bada, item) {
+    item.kill();
+}
+
+function sit() {
+    if(!cursors.right.isDown && !cursors.left.isDown){
+        bada.sit = true;
+        bada.animations.play('sit');
+    }
+}
+
+function createZok(width, height, key) {
+    var zok = zokee.create(width, height, key);
+    zok.body.gravity.y = 300;
+    zok.anchor.setTo(0.5, 1);
+}
+// This function can take clouds as argument
+function manageClouds() {
+    clouds.forEach(function(cloud) {
+        if(cloud.x < 0 - cloud.width){
+            cloud.x = game.world.width;
+        }
+    }, this);
 }
