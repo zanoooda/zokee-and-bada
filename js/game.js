@@ -56,15 +56,16 @@ function create() {
 
     var cloud1 = clouds.create(500, 100, 'cloud');
     game.physics.arcade.enable(cloud1);
-    cloud1.body.velocity.x = -10;
+    cloud1.body.velocity.x = -20;
     cloud1.body.immovable = true;
     cloud1.body.checkCollision.down = false;
     cloud1.body.checkCollision.left = false;
     cloud1.body.checkCollision.right = false;
 
+    // On a cloud no animation left and right
     var cloud2 = clouds.create(900, 100, 'cloud');
     game.physics.arcade.enable(cloud2);
-    cloud2.body.velocity.x = -10;
+    cloud2.body.velocity.x = -20;
     cloud2.body.immovable = true;
     cloud2.body.checkCollision.down = false;
     cloud2.body.checkCollision.left = false;
@@ -126,7 +127,7 @@ function update() {
 
     if (cursors.up.isDown)
     {
-        bada.body.velocity.y = -150;
+        bada.body.velocity.y = -200;
     }
     else if (cursors.down.isDown)
     {
