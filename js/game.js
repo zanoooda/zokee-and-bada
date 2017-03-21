@@ -8,29 +8,24 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, 'game-container', {
 // Game objects
 var cursors;
 
-var obstacles;
+//var obstacles;
 var platforms;
+var clouds;
 var zokee;
 
 var bada;
-
-var zok1;
-var zok2;
-var zok3;
-var zok4;
 
 // Preload media
 function preload() {
     game.load.spritesheet('bada', 'assets/images/bada.png', 48, 48);
     game.load.image('ground', 'assets/images/ground.png');
     game.load.image('zok', 'assets/images/zok.png');
+    game.load.image('cloud', 'assets/images/cloud.png');
 }
 
 // Create game
 function create() {
     game.physics.startSystem(Phaser.Physics.ARCADE);
-    //game.physics.arcade.gravity.y = 300;
-    // Take width and height out to some config
     game.world.setBounds(0, 0, 1900, 600);
 
     // Background color
@@ -56,6 +51,15 @@ function create() {
     var ground4 = platforms.create(1500, (game.world.height / 4) * 3, 'ground');
     ground4.body.immovable = true;
 
+    // clouds
+    clouds = game.add.group();
+    clouds.enableBody = true;
+
+    var cloud1 = clouds.create(500, 100, 'cloud');
+    game.physics.arcade.enable(cloud1);
+    cloud1.body.gravity.x = -10;
+    cloud1.body.immovable = true;
+
     //Bada
     bada = game.add.sprite(50, 150, 'bada');
     game.physics.arcade.enable(bada);
@@ -65,6 +69,7 @@ function create() {
     bada.animations.add('right', [0, 1, 2, 3], 10, true);
     bada.animations.add('left', [5, 6, 7, 8], 10, true);
     bada.animations.add('down', [9], 20, true);
+    //bada.animations.add('sit', [10], 20, true);
 
     // Zokee
     zokee = game.add.group();
@@ -88,6 +93,7 @@ function update() {
     game.physics.arcade.collide(zokee, platforms);
     game.physics.arcade.collide(zokee, zokee);
     game.physics.arcade.collide(bada, platforms);
+    game.physics.arcade.collide(bada, clouds);
     game.physics.arcade.collide(bada, zokee, collect);
 
     if (cursors.left.isDown) {
