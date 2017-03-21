@@ -58,6 +58,9 @@ function create() {
     game.physics.arcade.enable(cloud1);
     cloud1.body.gravity.x = -10;
     cloud1.body.immovable = true;
+    cloud1.body.checkCollision.down = false;
+    cloud1.body.checkCollision.left = false;
+    cloud1.body.checkCollision.right = false;
 
     //Bada
     bada = game.add.sprite(50, 150, 'bada');
