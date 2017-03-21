@@ -13,6 +13,7 @@ var platforms;
 var clouds;
 var zokee;
 var honey;
+var enemies;
 
 var bada;
 
@@ -23,6 +24,7 @@ function preload() {
     game.load.image('zok', 'assets/images/zok.png');
     game.load.image('cloud', 'assets/images/cloud.png');
     game.load.image('honey', 'assets/images/honey.png');
+    game.load.image('bee', 'assets/images/bee.png');
 }
 
 // Create game
@@ -68,11 +70,16 @@ function create() {
     createHoney(300, 200, 'honey');
     createHoney(550, 200, 'honey');
     createHoney(700, 200, 'honey');
-    createHoney(850, 200, 'honey');
     createHoney(1100, 200, 'honey');
     createHoney(1300, 200, 'honey');
     createHoney(1600, 200, 'honey');
     createHoney(1800, 200, 'honey');
+
+    // Enemies
+    enemies = game.add.group();
+    enemies.enableBody = true;
+
+    createBee(250, 440, 'bee');
 
     //Bada
     bada = game.add.sprite(50, 150, 'bada');
@@ -95,12 +102,17 @@ function update() {
     bada.sit = false;
 
     game.physics.arcade.collide(honey, platforms);
+
+    game.physics.arcade.collide(enemies, platforms);
+
     game.physics.arcade.collide(zokee, platforms);
     game.physics.arcade.collide(zokee, zokee);
+
     game.physics.arcade.collide(bada, platforms);
     game.physics.arcade.collide(bada, clouds, sit);
     game.physics.arcade.collide(bada, zokee);
     game.physics.arcade.collide(bada, honey, collect);
+    game.physics.arcade.collide(bada, enemies, recoil);
 
     if (cursors.left.isDown) {
         bada.animations.play('left');
@@ -137,6 +149,16 @@ function sit() {
         bada.sit = true;
         bada.animations.play('sit');
     }
+}
+
+function recoil(bada, item) {
+    //implement
+}
+
+function createBee(width, height, key) {
+    var bee = enemies.create(width, height, key);
+    bee.anchor.setTo(0.5, 1);
+    bee.body.immovable = true;
 }
 
 function createHoney(width, height, key) {
