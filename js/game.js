@@ -56,22 +56,8 @@ function create() {
     clouds = game.add.group();
     clouds.enableBody = true;
 
-    var cloud1 = clouds.create(500, 100, 'cloud');
-    //game.physics.arcade.enable(cloud1);
-    cloud1.body.velocity.x = -20;
-    cloud1.body.immovable = true;
-    cloud1.body.checkCollision.down = false;
-    cloud1.body.checkCollision.left = false;
-    cloud1.body.checkCollision.right = false;
-
-    // On a cloud no animation left and right
-    var cloud2 = clouds.create(900, 100, 'cloud');
-    game.physics.arcade.enable(cloud2);
-    cloud2.body.velocity.x = -20;
-    cloud2.body.immovable = true;
-    cloud2.body.checkCollision.down = false;
-    cloud2.body.checkCollision.left = false;
-    cloud2.body.checkCollision.right = false;
+    createCloud(500, 100, 'cloud');
+    createCloud(900, 100, 'cloud');
 
     //Bada
     bada = game.add.sprite(50, 150, 'bada');
@@ -102,8 +88,6 @@ function create() {
     honey.enableBody = true;
 
     var honey1 = honey.create(350, 200, 'honey');
-    game.physics.arcade.enable(honey1);
-    //honey1.body.immovable = true;
     honey1.body.gravity.y = 300;
     honey1.anchor.setTo(0.5, 1);
 
@@ -121,7 +105,7 @@ function update() {
     game.physics.arcade.collide(zokee, zokee);
     game.physics.arcade.collide(bada, platforms);
     game.physics.arcade.collide(bada, clouds, sit);
-    game.physics.arcade.collide(bada, zokee, collect);
+    game.physics.arcade.collide(bada, zokee);
     game.physics.arcade.collide(bada, honey, collect);
 
     if (cursors.left.isDown) {
@@ -166,7 +150,16 @@ function createZok(width, height, key) {
     zok.body.gravity.y = 300;
     zok.anchor.setTo(0.5, 1);
 }
-// This function can take clouds as argument
+
+function createCloud(width, height, key) {
+    var cloud = clouds.create(width, height, key);
+    cloud.body.velocity.x = -20;
+    cloud.body.immovable = true;
+    cloud.body.checkCollision.down = false;
+    cloud.body.checkCollision.left = false;
+    cloud.body.checkCollision.right = false;
+}
+
 function manageClouds() {
     clouds.forEach(function(cloud) {
         if(cloud.x < 0 - cloud.width){
