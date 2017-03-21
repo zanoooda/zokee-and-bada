@@ -44,13 +44,32 @@ function create() {
     createPlatform(500, (game.world.height / 4) * 3, 'ground');
     createPlatform(1000, (game.world.height / 4) * 3, 'ground');
     createPlatform(1500, (game.world.height / 4) * 3, 'ground');
-    
+
     // Clouds
     clouds = game.add.group();
     clouds.enableBody = true;
 
     createCloud(500, 100, 'cloud');
     createCloud(900, 100, 'cloud');
+
+    // Zokee
+    zokee = game.add.group();
+    zokee.enableBody = true;
+    
+    createZok(350, 200, 'zok');
+
+    // Honey
+    honey = game.add.group();
+    honey.enableBody = true;
+
+    createHoney(300, 200, 'honey');
+    createHoney(550, 200, 'honey');
+    createHoney(700, 200, 'honey');
+    createHoney(850, 200, 'honey');
+    createHoney(1100, 200, 'honey');
+    createHoney(1300, 200, 'honey');
+    createHoney(1600, 200, 'honey');
+    createHoney(1800, 200, 'honey');
 
     //Bada
     bada = game.add.sprite(50, 150, 'bada');
@@ -62,27 +81,6 @@ function create() {
     bada.animations.add('left', [5, 6, 7, 8], 10, true);
     bada.animations.add('down', [9], 20, true);
     bada.animations.add('sit', [10], 20, true);
-
-    // Zokee
-    zokee = game.add.group();
-    zokee.enableBody = true;
-    
-    createZok(300, 200, 'zok');
-    createZok(550, 200, 'zok');
-    createZok(700, 200, 'zok');
-    createZok(850, 200, 'zok');
-    createZok(1100, 200, 'zok');
-    createZok(1300, 200, 'zok');
-    createZok(1600, 200, 'zok');
-    createZok(1800, 200, 'zok');
-
-    // Honey
-    honey = game.add.group();
-    honey.enableBody = true;
-
-    var honey1 = honey.create(350, 200, 'honey');
-    honey1.body.gravity.y = 300;
-    honey1.anchor.setTo(0.5, 1);
 
     // Camera
     game.camera.follow(bada);
@@ -136,6 +134,12 @@ function sit() {
         bada.sit = true;
         bada.animations.play('sit');
     }
+}
+
+function createHoney(width, height, key) {
+    var h = honey.create(width, height, key);
+    h.body.gravity.y = 300;
+    h.anchor.setTo(0.5, 1);
 }
 
 function createZok(width, height, key) {
