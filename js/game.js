@@ -49,8 +49,11 @@ function create() {
     clouds = game.add.group();
     clouds.enableBody = true;
 
-    createCloud(500, 100, 'cloud');
-    createCloud(900, 100, 'cloud');
+    createCloud(400, 100, 'cloud');
+    createCloud(800, 100, 'cloud');
+    createCloud(1200, 100, 'cloud');
+    createCloud(1500, 100, 'cloud');
+    createCloud(1900, 100, 'cloud');
 
     // Zokee
     zokee = game.add.group();
