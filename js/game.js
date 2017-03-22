@@ -61,7 +61,7 @@ function create() {
     zokee = game.add.group();
     zokee.enableBody = true;
     
-    createZok(350, 200, 'zok');
+    createZok(800, 200, 'zok');
 
     // Honey
     honey = game.add.group();
@@ -140,9 +140,9 @@ function update() {
     }
 
     //recoil
-    if(bada.recoil) {
-        bada.body.velocity.x = -150;
-    }
+    // if(bada.recoil) {
+    //     bada.body.velocity.x = -150;
+    // }
 }
 
 function collect(bada, item) {
@@ -161,13 +161,13 @@ function recoil(bada, item) {
 
     bada.body.velocity.y = -200;
     // it doesn't works
-    //bada.body.velocity.x = -200;
+    bada.body.acceleration.x = -8000;
 
-    bada.recoil = true;
+    //bada.recoil = true;
 
     setTimeout(function() {
-        bada.recoil = false;
-    }, 500);
+        bada.body.acceleration.x = 0;
+    }, 1000);
 }
 
 function createBee(width, height, key) {
