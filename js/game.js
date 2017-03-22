@@ -106,7 +106,7 @@ function update() {
     game.physics.arcade.collide(enemies, platforms);
 
     game.physics.arcade.collide(zokee, platforms);
-    game.physics.arcade.collide(zokee, zokee);
+    //game.physics.arcade.collide(zokee, zokee);
 
     game.physics.arcade.collide(bada, platforms);
     game.physics.arcade.collide(bada, clouds, sit);
@@ -138,6 +138,11 @@ function update() {
         bada.animations.play('down');
         bada.body.velocity.y = 150;
     }
+
+    //recoil
+    if(bada.recoil) {
+        bada.body.velocity.x = -150;
+    }
 }
 
 function collect(bada, item) {
@@ -152,7 +157,17 @@ function sit() {
 }
 
 function recoil(bada, item) {
-    //implement
+    /// implement
+
+    bada.body.velocity.y = -200;
+    // it doesn't works
+    //bada.body.velocity.x = -200;
+
+    bada.recoil = true;
+
+    setTimeout(function() {
+        bada.recoil = false;
+    }, 500);
 }
 
 function createBee(width, height, key) {
