@@ -39,8 +39,7 @@ function create() {
     cursors = game.input.keyboard.createCursorKeys();
 
     // Platforms
-    platforms = game.add.group();
-    platforms.enableBody = true;
+    platforms = createGroup();
 
     createPlatform(0, (game.world.height / 4) * 3, 'ground');
     createPlatform(500, (game.world.height / 4) * 3, 'ground');
@@ -48,8 +47,7 @@ function create() {
     createPlatform(1500, (game.world.height / 4) * 3, 'ground');
 
     // Clouds
-    clouds = game.add.group();
-    clouds.enableBody = true;
+    clouds = createGroup();
 
     createCloud(400, 100, 'cloud');
     createCloud(800, 100, 'cloud');
@@ -58,14 +56,12 @@ function create() {
     createCloud(1900, 100, 'cloud');
 
     // Zokee
-    zokee = game.add.group();
-    zokee.enableBody = true;
+    zokee = createGroup();
     
     createZok(800, 200, 'zok');
 
     // Honey
-    honey = game.add.group();
-    honey.enableBody = true;
+    honey = createGroup();
 
     createHoney(300, 200, 'honey');
     createHoney(550, 200, 'honey');
@@ -76,14 +72,16 @@ function create() {
     createHoney(1800, 200, 'honey');
 
     // Enemies
-    enemies = game.add.group();
-    enemies.enableBody = true;
+    enemies = createGroup();
 
-    createBee(250, 440, 'bee');
+    createEnemy(250, 440, 'bee');
 
     //Bada
     bada = game.add.sprite(50, 150, 'bada');
+
     game.physics.arcade.enable(bada);
+    game.camera.follow(bada);
+    
     bada.anchor.setTo(0.5, 1);
     bada.body.gravity.y = 300;
     bada.animations.add('stand', [4], 20, true);
@@ -91,9 +89,7 @@ function create() {
     bada.animations.add('left', [5, 6, 7, 8], 10, true);
     bada.animations.add('down', [9], 20, true);
     bada.animations.add('sit', [10], 20, true);
-
-    // Camera
-    game.camera.follow(bada);
+    bada.animations.add('recoil', [9], 20, true);
 }
 
 // Update game
@@ -103,7 +99,7 @@ function update() {
 
     game.physics.arcade.collide(honey, platforms);
 
-    game.physics.arcade.collide(enemies, platforms);
+    //game.physics.arcade.collide(enemies, platforms);
 
     game.physics.arcade.collide(zokee, platforms);
     //game.physics.arcade.collide(zokee, zokee);
@@ -114,17 +110,21 @@ function update() {
     game.physics.arcade.collide(bada, honey, collect);
     game.physics.arcade.collide(bada, enemies, recoil);
 
-    if (cursors.left.isDown) {
+    if (cursors.left.isDown && !bada.recoil) {
         bada.animations.play('left');
         bada.body.velocity.x = -150;
     }
-    else if (cursors.right.isDown) {
+    else if (cursors.right.isDown  && !bada.recoil) {
         bada.animations.play('right');
         bada.body.velocity.x = 150;
     }
     else {
         bada.body.velocity.x = 0;
-        if(!bada.sit) {
+        if(bada.recoil) {
+            bada.body.velocity.x = -50;
+            bada.animations.play('recoil');
+        }
+        if(!bada.sit && !bada.recoil) {
             bada.animations.play('stand');
         }
     }
@@ -133,54 +133,34 @@ function update() {
     {
         bada.body.velocity.y = -200;
     }
-    else if (cursors.down.isDown)
+    else if (cursors.down.isDown && !bada.recoil)
     {
         bada.animations.play('down');
         bada.body.velocity.y = 150;
     }
-
-    //recoil
-    // if(bada.recoil) {
-    //     bada.body.velocity.x = -150;
-    // }
 }
 
-function collect(bada, item) {
-    item.kill();
-}
+// TODO: learn what does it mean 'game.physics.arcade.enable(sprite)'
 
-function sit() {
-    if(!cursors.right.isDown && !cursors.left.isDown){
-        bada.sit = true;
-        bada.animations.play('sit');
-    }
-}
-
-function recoil(bada, item) {
-    // may be sprite have no to react to left/right key on recoil
-
-    bada.body.velocity.y = -200;
-    // 
-    bada.body.acceleration.x = -8000;
-
-    //bada.recoil = true;
-
-    setTimeout(function() {
-        bada.body.acceleration.x = 0;
-    }, 1000);
-}
-
-function createBee(width, height, key) {
+function createEnemy(width, height, key) {
     var bee = enemies.create(width, height, key);
     bee.anchor.setTo(0.5, 1);
     bee.body.immovable = true;
 
-    var beeTween = game.add.tween(bee).to({x: width, y: height - 100}, 2000, null, true, 0, -1, true);    
-    beeTween.onComplete.add(function(){
+    bee.tween = game.add.tween(bee).to({x: width, y: height - 100}, 2000, null, true, 0, -1, true);    
+    bee.tween.onComplete.add(function(){
         beeTween.to({x: width, y: height}, 2000, null, true, 0, -1, true);   
     });    
 
     return bee;
+}
+
+// Creation functions
+function createGroup() {
+    var group = game.add.group();
+    group.enableBody = true;
+
+    return group;
 }
 
 function createHoney(width, height, key) {
@@ -217,10 +197,37 @@ function createCloud(width, height, key) {
     return cloud;
 }
 
+// Updation functions
 function manageClouds() {
     clouds.forEach(function(cloud) {
         if(cloud.x < 0 - cloud.width){
             cloud.x = game.world.width;
         }
     }, this);
+}
+
+function collect(bada, item) {
+    item.kill();
+}
+
+function sit() {
+    if(!cursors.right.isDown && !cursors.left.isDown){
+        bada.sit = true;
+        bada.animations.play('sit');
+    }
+}
+// TODO: if recoil from down side of enemy it must stop (item.tween.pause(), item.tween.resume())
+//       create logic to resume tween
+//
+// TODO: if from right side of enemy it must recoil to another side
+function recoil(bada, item) {
+    bada.body.velocity.y = -200;
+
+    bada.recoil = true;
+
+    // TODO: Change it to bada.recoil = false; when bada 'touch' something
+    setTimeout(function() {
+        //bada.body.velocity.x = 0;
+        bada.recoil = false;
+    }, 1500);
 }
