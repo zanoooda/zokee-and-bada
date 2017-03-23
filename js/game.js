@@ -175,27 +175,35 @@ function createBee(width, height, key) {
     bee.anchor.setTo(0.5, 1);
     bee.body.immovable = true;
 
-    var beeTween = game.add.tween(bee).to({x: width, y: height - 100}, 3000, null, true, 0, -1, true);    
+    var beeTween = game.add.tween(bee).to({x: width, y: height - 100}, 2000, null, true, 0, -1, true);    
     beeTween.onComplete.add(function(){
-        beeTween.to({x: width, y: height}, 3000, null, true, 0, -1, true);   
+        beeTween.to({x: width, y: height}, 2000, null, true, 0, -1, true);   
     });    
+
+    return bee;
 }
 
 function createHoney(width, height, key) {
     var h = honey.create(width, height, key);
     h.body.gravity.y = 300;
     h.anchor.setTo(0.5, 1);
+
+    return h;
 }
 
 function createZok(width, height, key) {
     var zok = zokee.create(width, height, key);
-    zok.body.gravity.y = 300;
+    //zok.body.gravity.y = 300;
     zok.anchor.setTo(0.5, 1);
+
+    return zok;
 }
 
 function createPlatform(width, height, key) {
-    var ground = platforms.create(width, height, key);
-    ground.body.immovable = true;
+    var platform = platforms.create(width, height, key);
+    platform.body.immovable = true;
+
+    return platform;
 }
 
 function createCloud(width, height, key) {
@@ -205,6 +213,8 @@ function createCloud(width, height, key) {
     cloud.body.checkCollision.down = false;
     cloud.body.checkCollision.left = false;
     cloud.body.checkCollision.right = false;
+
+    return cloud;
 }
 
 function manageClouds() {
