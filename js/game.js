@@ -157,10 +157,10 @@ function sit() {
 }
 
 function recoil(bada, item) {
-    /// implement
+    // may be sprite have no to react to left/right key on recoil
 
     bada.body.velocity.y = -200;
-    // it doesn't works
+    // 
     bada.body.acceleration.x = -8000;
 
     //bada.recoil = true;
@@ -174,6 +174,16 @@ function createBee(width, height, key) {
     var bee = enemies.create(width, height, key);
     bee.anchor.setTo(0.5, 1);
     bee.body.immovable = true;
+
+    var beeTween = game.add.tween(bee).to({x: width, y: height - 100}, 2000);    
+    beeTween.onComplete.add(function(){
+        //bee.x = width; bee.y = height;
+        beeTween.to({x: width, y: height}, 2000); 
+        //beeTween.start();    
+    });    
+    beeTween.start();
+
+    // tween.repeat()
 }
 
 function createHoney(width, height, key) {
