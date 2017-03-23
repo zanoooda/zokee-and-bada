@@ -175,15 +175,10 @@ function createBee(width, height, key) {
     bee.anchor.setTo(0.5, 1);
     bee.body.immovable = true;
 
-    var beeTween = game.add.tween(bee).to({x: width, y: height - 100}, 2000);    
+    var beeTween = game.add.tween(bee).to({x: width, y: height - 100}, 3000, null, true, 0, -1, true);    
     beeTween.onComplete.add(function(){
-        //bee.x = width; bee.y = height;
-        beeTween.to({x: width, y: height}, 2000); 
-        //beeTween.start();    
+        beeTween.to({x: width, y: height}, 3000, null, true, 0, -1, true);   
     });    
-    beeTween.start();
-
-    // tween.repeat()
 }
 
 function createHoney(width, height, key) {
