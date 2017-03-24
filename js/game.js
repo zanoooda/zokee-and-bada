@@ -1,5 +1,5 @@
 // Game instance
-var game = new Phaser.Game(800, 600, Phaser.AUTO, 'game-container', {
+var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'game-container', {
     preload: preload,
     create: create,
     update: update
