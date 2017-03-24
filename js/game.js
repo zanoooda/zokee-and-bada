@@ -77,24 +77,11 @@ function create() {
     createEnemy(250, 440, 'bee');
 
     //Bada
-    bada = game.add.sprite(50, 150, 'bada');
-
-    game.physics.arcade.enable(bada);
-    game.camera.follow(bada);
-    
-    bada.anchor.setTo(0.5, 1);
-    bada.body.gravity.y = 300;
-    bada.animations.add('stand', [4], 20, true);
-    bada.animations.add('right', [0, 1, 2, 3], 10, true);
-    bada.animations.add('left', [5, 6, 7, 8], 10, true);
-    bada.animations.add('down', [9], 20, true);
-    bada.animations.add('sit', [10], 20, true);
-    bada.animations.add('recoil', [9], 20, true);
+    bada = createPlayer(50, 150, 'bada');
 }
 
 // Update game
 function update() {
-    manageClouds();
     bada.sit = false;
 
     game.physics.arcade.collide(honey, platforms);
@@ -141,7 +128,6 @@ function update() {
 }
 
 // TODO: learn what does it mean 'game.physics.arcade.enable(sprite)'
-
 function createEnemy(width, height, key) {
     var bee = enemies.create(width, height, key);
     bee.anchor.setTo(0.5, 1);
@@ -157,6 +143,8 @@ function createEnemy(width, height, key) {
 
 // Creation functions
 function createGroup() {
+    // Is group.physicsBodyType = Phaser.Physics.ARCADE equal to game.physics.arcade.enable(sprite) ?
+
     var group = game.add.group();
     group.enableBody = true;
 
@@ -188,22 +176,41 @@ function createPlatform(width, height, key) {
 
 function createCloud(width, height, key) {
     var cloud = clouds.create(width, height, key);
+
     cloud.body.velocity.x = -20;
     cloud.body.immovable = true;
+    
     cloud.body.checkCollision.down = false;
     cloud.body.checkCollision.left = false;
     cloud.body.checkCollision.right = false;
 
+    cloud.checkWorldBounds = true;
+    cloud.events.onOutOfBounds.add(resetCloud);
+
     return cloud;
 }
 
+function createPlayer(width, height, key) {
+    player = game.add.sprite(width, height, key);
+
+    game.physics.arcade.enable(player);
+    game.camera.follow(player);
+    
+    player.anchor.setTo(0.5, 1);
+    player.body.gravity.y = 300;
+    player.animations.add('stand', [4], 20, true);
+    player.animations.add('right', [0, 1, 2, 3], 10, true);
+    player.animations.add('left', [5, 6, 7, 8], 10, true);
+    player.animations.add('down', [9], 20, true);
+    player.animations.add('sit', [10], 20, true);
+    player.animations.add('recoil', [9], 20, true);
+
+    return player;
+}
+
 // Updation functions
-function manageClouds() {
-    clouds.forEach(function(cloud) {
-        if(cloud.x < 0 - cloud.width){
-            cloud.x = game.world.width;
-        }
-    }, this);
+function resetCloud(cloud) {
+    cloud.x = game.world.width;
 }
 
 function collect(bada, item) {
@@ -216,11 +223,13 @@ function sit() {
         bada.animations.play('sit');
     }
 }
-// TODO: if recoil from down side of enemy it must stop (item.tween.pause(), item.tween.resume())
-//       create logic to resume tween
-//
-// TODO: if from right side of enemy it must recoil to another side
+
 function recoil(bada, item) {
+    // TODO: if recoil from down side of enemy it must stop (item.tween.pause(), item.tween.resume())
+    //       create logic to resume tween
+    //
+    // TODO: if from right side of enemy it must recoil to another side
+
     bada.body.velocity.y = -200;
 
     bada.recoil = true;
