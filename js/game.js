@@ -22,8 +22,8 @@ var bada;
 function preload() {
     game.load.spritesheet('bada', 'assets/images/bada.png', 48, 48);
     game.load.spritesheet('bee', 'assets/images/bee.png', 32, 32);
+    game.load.spritesheet('zok', 'assets/images/zok.png', 32, 32);
     game.load.image('ground', 'assets/images/ground.png');
-    game.load.image('zok', 'assets/images/zok.png');
     game.load.image('cloud', 'assets/images/cloud.png');
     game.load.image('honey', 'assets/images/honey.png');
 }
@@ -87,12 +87,17 @@ function update() {
     game.physics.arcade.collide(honey, platforms);
 
     game.physics.arcade.collide(zokee, platforms);
+    // test
+    game.physics.arcade.collide(zokee, enemies, recoil);
+    //
 
     game.physics.arcade.collide(bada, platforms);
     bada.sit = game.physics.arcade.collide(bada, clouds, sit);
-    game.physics.arcade.collide(bada, zokee);
     game.physics.arcade.collide(bada, honey, collect);
+    // TODO: Bada loose health on touch but he feel better when find honey (with no zok)
     game.physics.arcade.collide(bada, enemies, recoil);
+    // TODO: zok have no to take bada up to space, but it nice to contact with bada
+    game.physics.arcade.collide(bada, zokee);
 
     if(bada.recoil) {
         bada.body.velocity.x = -50;
@@ -118,8 +123,10 @@ function update() {
             bada.body.velocity.y = 150;
         }
     }
-    // zokee follow test
-    game.physics.arcade.moveToObject(zokee.children[0], bada, 60);
+    // TODO: Add logic to each zok and option to stop following
+    if(!zokee.children[0].recoiled){
+        game.physics.arcade.moveToObject(zokee.children[0], bada, 60);
+    }
 }
 
 // Creation functions
@@ -134,6 +141,7 @@ function createGroup() {
 }
 
 function createHoney(width, height, key) {
+    // TODO: In the honey can be zok
     var h = honey.create(width, height, key);
     h.body.gravity.y = 300;
     h.anchor.setTo(0.5, 1);
@@ -143,7 +151,17 @@ function createHoney(width, height, key) {
 
 function createZok(width, height, key) {
     var zok = zokee.create(width, height, key);
-    //zok.body.gravity.y = 300;
+
+    zok.animations.add('stand', [0], 0, true);
+    zok.animations.add('run', [0, 1], 10, true);
+    // TODO: Add logic to animations
+    zok.animations.play('stand');
+
+    zok.body.gravity.y = 300;
+
+    // Check what this line do and may be re-remove it 
+    game.physics.arcade.enable(zok);
+
     zok.anchor.setTo(0.5, 1);
 
     return zok;
@@ -199,7 +217,7 @@ function createPlayer(width, height, key) {
     player.anchor.setTo(0.5, 1);
     player.body.gravity.y = 300;
 
-    player.animations.add('stand', [4], 20, true);
+    player.animations.add('stand', [4], 0, true);
     player.animations.add('right', [0, 1, 2, 3], 10, true);
     player.animations.add('left', [5, 6, 7, 8], 10, true);
     player.animations.add('down', [9], 0, true);
@@ -214,19 +232,26 @@ function resetCloud(cloud) {
     cloud.x = game.world.width;
 }
 
-function collect(bada, item) {
+function collect(sprite, item) {
     item.kill();
 }
-
+// This function can be the bada.sit(), will be better
 function sit() {
     if(!cursors.right.isDown && !cursors.left.isDown){
         bada.animations.play('sit');
     }
 }
 
-function recoil(bada, enemy) {
-    // ISSUE: When player touch enemy fron up twise. First setTimeout make 'bada.recoil = false' when second recoil still is...
-    if(bada.body.wasTouching.up) {
+function recoil(sprite, enemy) {
+
+    console.log('recoil');
+    //zokee.children[0].recoiled = true;
+
+    zokee.children[0].body.velocity.setTo(0, 0)
+    
+
+    // ISSUE: When player touch enemy fron up twise. First setTimeout make 'sprite.recoil = false' when second recoil still is...
+    if(sprite.body.wasTouching.up) {
         enemy.tween.pause();
     }
 
@@ -235,14 +260,14 @@ function recoil(bada, enemy) {
     //
     // TODO: if from right side of enemy it must recoil to another side
 
-    bada.body.velocity.y = -200;
+    sprite.body.velocity.y = -200;
 
-    bada.recoil = true;
+    sprite.recoil = true;
 
-    // TODO: Change it to bada.recoil = false; when bada 'touch' something
+    // TODO: Change it to sprite.recoil = false; when bada 'touch' something
     setTimeout(function() {
-        //bada.body.velocity.x = 0;
-        bada.recoil = false;
+        //sprite.body.velocity.x = 0;
+        sprite.recoil = false;
         // Better to resume tween directly whan player stop to touching enemy from up
         enemy.tween.resume();
     }, 1500);
