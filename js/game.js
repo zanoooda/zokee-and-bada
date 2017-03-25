@@ -51,7 +51,6 @@ function create() {
     // Platforms
     platforms = createGroup();
 
-    createPlatform(0, 150, 'ground');
     createPlatform(0, (game.world.height / 4) * 3, 'ground');
     createPlatform(500, (game.world.height / 4) * 3, 'ground');
     createPlatform(1000, (game.world.height / 4) * 3, 'ground');
@@ -111,14 +110,16 @@ function update() {
                 bada.animations.play('stand');
             }
         }
-
-        if (cursors.up.isDown && bada.body.wasTouching.down) {
+        // TODO: Make condition to fly, animation to fly and condition to animation to fly
+        if ((cursors.up.isDown && bada.body.wasTouching.down) || (cursors.up.isDown && bada.canFly)) {
             bada.body.velocity.y = -200;
         } else if (cursors.down.isDown) {
             bada.animations.play('down');
             bada.body.velocity.y = 150;
         }
     }
+    // zokee follow test
+    //game.physics.arcade.moveToObject(zokee.children[0], bada, 60);
 }
 
 // Creation functions
