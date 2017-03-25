@@ -119,7 +119,7 @@ function update() {
         }
     }
     // zokee follow test
-    //game.physics.arcade.moveToObject(zokee.children[0], bada, 60);
+    game.physics.arcade.moveToObject(zokee.children[0], bada, 60);
 }
 
 // Creation functions
