@@ -182,7 +182,7 @@ function createEnemy(width, height, key) {
     enemy.animations.add('zzz', [0, 1], 30, true);
     enemy.animations.play('zzz');
 
-    enemy.tween = game.add.tween(enemy).to({x: width, y: height - 100}, 2000, null, true, 0, -1, true);    
+    enemy.tween = game.add.tween(enemy).to({x: width, y: height - 100}, 2000, null, true, Math.random() * 1000, -1, true);   
     enemy.tween.onComplete.add(function(){
         enemy.tween.to({x: width, y: height}, 2000, null, true, 0, -1, true);   
     });    
