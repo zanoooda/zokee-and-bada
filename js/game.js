@@ -90,7 +90,7 @@ function update() {
     game.physics.arcade.collide(honey, honey);
 
     game.physics.arcade.collide(zokee, platforms);
-    // test
+    // ISSUE: Not every time zik collide with bada
     game.physics.arcade.collide(zokee, enemies, recoil);
     game.physics.arcade.collide(zokee, honey, enter);
 
@@ -163,8 +163,8 @@ function createZok(width, height, key) {
     zok.animations.add('run', [0, 1], 10, true);
     // TODO: Add logic to animations
     zok.animations.play('stand');
-
-    zok.body.gravity.y = 300;
+    // Nice idea to change gravity for zok
+    zok.body.gravity.y = 1000;
 
     // Check what this line do and may be re-remove it 
     game.physics.arcade.enable(zok);
