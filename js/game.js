@@ -30,6 +30,8 @@ function preload() {
 
 // Create game
 function create() {
+    // TODO: add hedgehog 
+
     game.physics.startSystem(Phaser.Physics.ARCADE);
     game.world.setBounds(0, 0, 1900, 600);
 
@@ -85,10 +87,14 @@ function create() {
 // Update game
 function update() {
     game.physics.arcade.collide(honey, platforms);
+    game.physics.arcade.collide(honey, honey);
 
     game.physics.arcade.collide(zokee, platforms);
     // test
     game.physics.arcade.collide(zokee, enemies, recoil);
+    game.physics.arcade.collide(zokee, honey, enter);
+
+    game.physics.arcade.collide(zokee, zokee, whatZokeeDo);
     //
 
     game.physics.arcade.collide(bada, platforms);
@@ -99,8 +105,13 @@ function update() {
     // TODO: zok have no to take bada up to space, but it nice to contact with bada
     game.physics.arcade.collide(bada, zokee);
 
+    // TODO: Add logic to each zok and option to stop following
+    // May be follow for a minute and after make something with animation and after next collide return to follow
+    if(!zokee.children[0].recoil){
+        game.physics.arcade.moveToObject(zokee.children[0], bada, 60);
+    }
+
     if(bada.recoil) {
-        bada.body.velocity.x = -50;
         bada.animations.play('recoil');
     } else {
         if (cursors.left.isDown) {
@@ -122,10 +133,6 @@ function update() {
             bada.animations.play('down');
             bada.body.velocity.y = 150;
         }
-    }
-    // TODO: Add logic to each zok and option to stop following
-    if(!zokee.children[0].recoiled){
-        game.physics.arcade.moveToObject(zokee.children[0], bada, 60);
     }
 }
 
@@ -191,8 +198,6 @@ function createCloud(width, height, key) {
 }
 
 function createEnemy(width, height, key) {
-    // TODO: Make the enemies move asyncroniusly
-
     var enemy = enemies.create(width, height, key);
     enemy.anchor.setTo(0.5, 1);
     enemy.body.immovable = true;
@@ -243,32 +248,29 @@ function sit() {
 }
 
 function recoil(sprite, enemy) {
-
-    console.log('recoil');
-    //zokee.children[0].recoiled = true;
-
-    zokee.children[0].body.velocity.setTo(0, 0)
-    
-
     // ISSUE: When player touch enemy fron up twise. First setTimeout make 'sprite.recoil = false' when second recoil still is...
     if(sprite.body.wasTouching.up) {
         enemy.tween.pause();
     }
 
-    // TODO: if recoil from down side of enemy it must stop (enemy.tween.pause(), enemy.tween.resume())
-    //       create logic to resume tween
-    //
     // TODO: if from right side of enemy it must recoil to another side
-
     sprite.body.velocity.y = -200;
+    sprite.body.velocity.x = -50;
 
     sprite.recoil = true;
 
     // TODO: Change it to sprite.recoil = false; when bada 'touch' something
     setTimeout(function() {
-        //sprite.body.velocity.x = 0;
         sprite.recoil = false;
         // Better to resume tween directly whan player stop to touching enemy from up
         enemy.tween.resume();
     }, 1500);
+}
+
+function enter(zok, h) {
+    // TODO: implement, make animation
+}
+
+function whatZokeeDo(zok1, zok2) {
+    // TODO: implement
 }
