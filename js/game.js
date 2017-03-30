@@ -61,7 +61,7 @@ function create() {
     // Honey
     honey = createGroup();
 
-    createHoney(300, 200, 'honey');
+    createHoney(300, 200, 'honey', true);
     createHoney(550, 200, 'honey');
     createHoney(700, 200, 'honey');
     createHoney(1100, 200, 'honey');
@@ -71,7 +71,7 @@ function create() {
 
     // Zokee
     zokee = createGroup();
-    
+
     createZok(700, 200, 'zok');
 
     // Enemies
@@ -90,7 +90,7 @@ function update() {
     game.physics.arcade.collide(honey, honey);
 
     game.physics.arcade.collide(zokee, platforms);
-    // ISSUE: Not every time zik collide with bada
+    // ISSUE: Not every time zok collide with the bee
     game.physics.arcade.collide(zokee, enemies, recoil);
     game.physics.arcade.collide(zokee, honey, enter);
 
@@ -107,11 +107,14 @@ function update() {
 
     // TODO: Add logic to each zok and option to stop following
     // May be follow for a minute and after make something with animation and after next collide return to follow
-    if(!zokee.children[0].recoil){
-        game.physics.arcade.moveToObject(zokee.children[0], bada, 60);
-    }
 
-    if(bada.recoil) {
+    zokee.forEach(function(zok) {
+        if (!zok.recoil) {
+            game.physics.arcade.moveToObject(zok, bada, 60);
+        }
+    }, this);
+
+    if (bada.recoil) {
         bada.animations.play('recoil');
     } else {
         if (cursors.left.isDown) {
@@ -122,7 +125,7 @@ function update() {
             bada.body.velocity.x = 150;
         } else {
             bada.body.velocity.x = 0;
-            if(!bada.sit) {
+            if (!bada.sit) {
                 bada.animations.play('stand');
             }
         }
@@ -146,12 +149,15 @@ function createGroup() {
 
     return group;
 }
-
-function createHoney(width, height, key) {
-    // TODO: In the honey can be zok
+// TODO: Change the name of var 'withZok'
+function createHoney(width, height, key, withZok = false) {
     var h = honey.create(width, height, key);
     h.body.gravity.y = 300;
     h.anchor.setTo(0.5, 1);
+    
+    if(withZok) {
+        h.zok = true;
+    }
 
     return h;
 }
@@ -164,7 +170,10 @@ function createZok(width, height, key) {
     // TODO: Add logic to animations
     zok.animations.play('stand');
     // Nice idea to change gravity for zok
-    zok.body.gravity.y = 1000;
+    zok.body.gravity.y = 300;
+
+    // it can be funny
+    zok.body.bounce.set(0.8);
 
     // Check what this line do and may be re-remove it 
     game.physics.arcade.enable(zok);
@@ -186,7 +195,7 @@ function createCloud(width, height, key) {
 
     cloud.body.velocity.x = -20;
     cloud.body.immovable = true;
-    
+
     cloud.body.checkCollision.down = false;
     cloud.body.checkCollision.left = false;
     cloud.body.checkCollision.right = false;
@@ -205,10 +214,10 @@ function createEnemy(width, height, key) {
     enemy.animations.add('zzz', [0, 1], 30, true);
     enemy.animations.play('zzz');
 
-    enemy.tween = game.add.tween(enemy).to({x: width, y: height - 100}, 2000, null, true, Math.random() * 1000, -1, true);   
-    enemy.tween.onComplete.add(function(){
-        enemy.tween.to({x: width, y: height}, 2000, null, true, 0, -1, true);   
-    });    
+    enemy.tween = game.add.tween(enemy).to({ x: width, y: height - 100 }, 2000, null, true, Math.random() * 1000, -1, true);
+    enemy.tween.onComplete.add(function () {
+        enemy.tween.to({ x: width, y: height }, 2000, null, true, 0, -1, true);
+    });
 
     return enemy;
 }
@@ -218,7 +227,7 @@ function createPlayer(width, height, key) {
 
     game.physics.arcade.enable(player);
     game.camera.follow(player);
-    
+
     player.anchor.setTo(0.5, 1);
     player.body.gravity.y = 300;
 
@@ -238,18 +247,22 @@ function resetCloud(cloud) {
 }
 
 function collect(sprite, item) {
+    if(item.zok) {
+        createZok(item.x, item.y, 'zok');
+    }
+
     item.kill();
 }
 // This function can be the bada.sit(), will be better
 function sit() {
-    if(!cursors.right.isDown && !cursors.left.isDown){
+    if (!cursors.right.isDown && !cursors.left.isDown) {
         bada.animations.play('sit');
     }
 }
 
 function recoil(sprite, enemy) {
     // ISSUE: When player touch enemy fron up twise. First setTimeout make 'sprite.recoil = false' when second recoil still is...
-    if(sprite.body.wasTouching.up) {
+    if (sprite.body.wasTouching.up) {
         enemy.tween.pause();
     }
 
@@ -260,7 +273,7 @@ function recoil(sprite, enemy) {
     sprite.recoil = true;
 
     // TODO: Change it to sprite.recoil = false; when bada 'touch' something
-    setTimeout(function() {
+    setTimeout(function () {
         sprite.recoil = false;
         // Better to resume tween directly whan player stop to touching enemy from up
         enemy.tween.resume();
@@ -272,5 +285,10 @@ function enter(zok, h) {
 }
 
 function whatZokeeDo(zok1, zok2) {
+
+    console.log('collided');
+    // Sometimes one zok cover second
+
     // TODO: implement
+    // May be zokee have to bounce one with another
 }
