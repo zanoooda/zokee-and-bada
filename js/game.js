@@ -1,3 +1,5 @@
+// TODO: Fix overlapping bugs
+
 // Game instance
 var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'game-container', {
     preload: preload,
@@ -63,16 +65,16 @@ function create() {
 
     createHoney(300, 200, 'honey', true);
     createHoney(550, 200, 'honey');
-    createHoney(700, 200, 'honey');
+    createHoney(700, 200, 'honey', true);
     createHoney(1100, 200, 'honey');
     createHoney(1300, 200, 'honey');
-    createHoney(1600, 200, 'honey');
+    createHoney(1600, 200, 'honey', true);
     createHoney(1800, 200, 'honey');
 
     // Zokee
     zokee = createGroup();
 
-    createZok(700, 200, 'zok');
+    //createZok(700, 200, 'zok');
 
     // Enemies
     enemies = createGroup();
@@ -170,13 +172,16 @@ function createZok(width, height, key) {
     // TODO: Add logic to animations
     zok.animations.play('stand');
     // Nice idea to change gravity for zok
-    zok.body.gravity.y = 300;
+    zok.body.gravity.y = 200;
 
     // it can be funny
     zok.body.bounce.set(0.8);
 
     // Check what this line do and may be re-remove it 
     game.physics.arcade.enable(zok);
+
+    // it doesn't helps
+    //zok.body.immovable = true;
 
     zok.anchor.setTo(0.5, 1);
 
