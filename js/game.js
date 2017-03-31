@@ -1,4 +1,8 @@
 // TODO: Fix overlapping bugs
+// Zok have no to overlap zok
+// Zok have no to overlap bee sometimes from right side
+
+// nice idea to use json file fore the level map
 
 // Game instance
 var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'game-container', {
@@ -20,7 +24,7 @@ var enemies;
 // Player
 var bada;
 
-// Preload media
+// Preload function (Phaser API)
 function preload() {
     game.load.spritesheet('bada', 'assets/images/bada.png', 48, 48);
     game.load.spritesheet('bee', 'assets/images/bee.png', 32, 32);
@@ -30,7 +34,7 @@ function preload() {
     game.load.image('honey', 'assets/images/honey.png');
 }
 
-// Create game
+// Create function (Phaser API)
 function create() {
     // TODO: add hedgehog 
 
@@ -86,7 +90,7 @@ function create() {
     bada = createPlayer(50, 150, 'bada');
 }
 
-// Update game
+// Update function (Phaser API)
 function update() {
     game.physics.arcade.collide(honey, platforms);
     game.physics.arcade.collide(honey, honey);
